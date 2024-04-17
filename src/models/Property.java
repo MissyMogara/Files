@@ -2,20 +2,22 @@ package models;
 
 import java.util.Objects;
 
-public class Finca {
+public class Property {
     //PROPERTIES
     private Long id; //PRIMARY KEY
+    private String name;
     private Double longitude;
     private Double latitude;
     private Double surface; //HECTARES
     private String locality;
     private String province;
     //CONSTRUCTOR
-    public Finca(){
+    public Property(){
 
     }
-    public Finca(Long id, Double longitude, Double latitude, Double surface, String locality, String province) {
+    public Property(Long id, String name, Double longitude, Double latitude, Double surface, String locality, String province) {
         this.id = id;
+        this.name = name;
         this.longitude = longitude;
         this.latitude = latitude;
         this.surface = surface;
@@ -28,6 +30,13 @@ public class Finca {
         return id;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Double getLongitude() {
         return longitude;
@@ -72,7 +81,7 @@ public class Finca {
 
     @Override
     public String toString() {
-        final StringBuffer sb = new StringBuffer("Finca{");
+        final StringBuffer sb = new StringBuffer("Property{");
         sb.append("id=").append(id);
         sb.append(", longitude=").append(longitude);
         sb.append(", latitude=").append(latitude);
@@ -88,8 +97,8 @@ public class Finca {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Finca finca = (Finca) o;
-        return Objects.equals(id, finca.id);
+        Property property = (Property) o;
+        return Objects.equals(id, property.id);
     }
 
     @Override
