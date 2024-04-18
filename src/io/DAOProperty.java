@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class DAOProperty {
@@ -79,5 +80,28 @@ public class DAOProperty {
                 .findFirst()
                 .orElse(new Property());
     }
+    //STREAMS METHODS
+
+    /**
+     * This method returns a List order by surface.
+     * @return List of properties.
+     */
+    public List<Property> getPropertiesBySurface(){
+        return this.properties.stream()
+                .sorted(Comparator.comparing(Property::getSurface))
+                .toList();
+    }
+
+    /**
+     * This method returns a List with the 3 next bigger properties.
+     * @return List of properties.
+     */
+    public List<Property> getBiggerProperties(){
+        return this.properties.stream()
+                .sorted(Comparator.comparing(Property::getSurface).reversed())
+                .limit(3)
+                .toList();
+    }
+
 
 }
