@@ -9,16 +9,16 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+import java.util.function.DoubleSupplier;
 
 public class DAOReadings {
     //PROPERTIES
     Set<Reading> readings;
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy-MM-dd'T'HH:mm:ss");
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
     //CONSTRUCTOR
     public DAOReadings() throws IOException {
         this.readings = new HashSet<>(loadData());
@@ -91,6 +91,86 @@ public class DAOReadings {
      */
     public void deleteReading(Reading reading){
         this.readings.remove(reading);
+    }
+    //STREAM METHODS
+
+    /**
+     * Returns all readings grouping by properties.
+     * @return HashMap
+     */
+    public HashMap<Long,List<Reading>> getReadingsByProperties(){
+        HashMap<Long,List<Reading>> readingsByProperties = new HashMap<>();
+        this.readings.stream().forEach(read ->{
+            readingsByProperties.put(read.getProperty().getId(), this.readings.stream()
+                    .filter(read1 -> read1.getProperty().getId().equals(read.getProperty().getId())).toList());
+
+        });
+        return readingsByProperties;
+    }
+
+    /**
+     * Returns max temperature from all reading of that property.
+     * @param id Long.
+     * @return Double.
+     */
+    public Double getMaxTemp(Long id){
+        Double errorValue = 0D;
+        DoubleSupplier supplier = () -> errorValue;
+        return this.readings.stream().filter(read -> read.getProperty().getId().equals(id))
+                .max(Comparator.comparing(Reading::getTemperature))
+                .stream().mapToDouble(Reading::getTemperature)
+                .findFirst().orElseGet(supplier);
+    }
+    /**
+     * Returns min temperature from all reading of that property.
+     * @param id Long.
+     * @return Double.
+     */
+    public Double getMinTemp(Long id){
+        Double errorValue = 0D;
+        DoubleSupplier supplier = () -> errorValue;
+        return this.readings.stream().filter(read -> read.getProperty().getId().equals(id))
+                .max(Comparator.comparing(Reading::getTemperature).reversed())
+                .stream().mapToDouble(Reading::getTemperature)
+                .findFirst().orElseGet(supplier);
+    }
+
+    /**
+     * Returns a List of Double of readings' humidity from a property order by date.
+     * @param id Long.
+     * @return Double List.
+     */
+    public List<Double> getHumidityByProperty(Long id){
+        return this.readings.stream().filter(read -> read.getProperty().getId().equals(id))
+                .sorted(Comparator.comparing(Reading::getMoment))
+                .map(Reading::getHumidity)
+                .toList();
+    }
+
+    /**
+     * Returns a List od Double of readings' temperatures from a property order by date.
+     * @param id Long.
+     * @return Double List.
+     */
+    public List<Double> getTemperatureByProperty(Long id){
+        return this.readings.stream().filter(read -> read.getProperty().getId().equals(id))
+                .sorted(Comparator.comparing(Reading::getMoment))
+                .map(Reading::getTemperature)
+                .toList();
+    }
+
+    /**
+     * Show all readings of a property of a day order by hour.
+     * @param id Long.
+     * @param dia LocalDate.
+     * @return Double List.
+     */
+    public List<Double> getTemperatureDayByProperty(Long id, LocalDate dia){
+    return this.readings.stream().filter(read -> read.getProperty().getId().equals(id))
+            .filter(read -> read.getMoment().toLocalDate().equals(dia))
+            .sorted((read1,read2) -> read1.getMoment().toLocalTime().compareTo(read2.getMoment().toLocalTime()))
+            .map(Reading::getTemperature)
+            .toList();
     }
 
 }

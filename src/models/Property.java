@@ -8,7 +8,7 @@ public class Property {
     private String name;
     private Double longitude;
     private Double latitude;
-    private Double surface; //HECTARES
+    private Double surface; //m2
     private String locality;
     private String province;
     //CONSTRUCTOR

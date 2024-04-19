@@ -8,6 +8,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
 
 public class DAOProperty {
@@ -103,5 +104,29 @@ public class DAOProperty {
                 .toList();
     }
 
+    /**
+     * Shows all properties group by city
+     * @return HashMap
+     */
+    public HashMap<String,List<Property>> getPropertiesByCity(){
+        HashMap<String,List<Property>> propertiesByCity = new HashMap<>();
+        this.properties.stream()
+                .forEach( prop -> {
+                    propertiesByCity.put(prop.getProvince(),this.properties.stream().filter(prop2 -> prop2.getProvince()
+                            .equals(prop.getProvince())).toList());
+
+                });
+        return propertiesByCity;
+    }
+
+    /**
+     * This method return a List with all the properties' name between 50 and 150 m2.
+     * @return List od String.
+     */
+    public List<String> getAvarageProperies(){
+        return this.properties.stream().filter(prop -> prop.getSurface() >= 50D && prop.getSurface() <= 150)
+                .map(Property::getName)
+                .toList();
+    }
 
 }
