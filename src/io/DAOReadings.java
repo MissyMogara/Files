@@ -66,7 +66,7 @@ public class DAOReadings {
             sb.append(reading.getTemperature()).append(",");
             sb.append(reading.getHumidity()).append(",");
             sb.append(reading.getMoment()).append(",");
-            sb.append(reading.getProperty());
+            sb.append(reading.getProperty().getId());
 
             //Write line in file readings.csv
             bw.write(sb.toString());
@@ -75,6 +75,15 @@ public class DAOReadings {
 
         //Close the BufferedWriter
         bw.close();
+    }
+    //GETTERS AND SETTERS
+
+    public Set<Reading> getReadings() {
+        return readings;
+    }
+
+    public void setReadings(Set<Reading> readings) {
+        this.readings = readings;
     }
 
     /**

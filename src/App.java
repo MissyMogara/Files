@@ -1,5 +1,6 @@
 import io.DAOProperty;
 import io.DAOReadings;
+import models.Reading;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -38,7 +39,15 @@ public class App {
             System.out.println(daoReadings.getTemperatureByProperty(1l));
             System.out.println("--------------------------------------");
             System.out.println(daoReadings.getTemperatureDayByProperty(1l, LocalDate.parse("2023-05-22")));
+            System.out.println("--------------------------------------");
+            daoReadings.deleteReading(daoReadings.getReadings().stream().findFirst().orElse(new Reading()));
+            daoReadings.deleteReading(daoReadings.getReadings().stream().findFirst().orElse(new Reading()));
+            daoReadings.deleteReading(daoReadings.getReadings().stream().findFirst().orElse(new Reading()));
+            daoReadings.deleteReading(daoReadings.getReadings().stream().findFirst().orElse(new Reading()));
+            daoReadings.deleteReading(daoReadings.getReadings().stream().findFirst().orElse(new Reading()));
 
+            System.out.println(daoReadings.getReadings());
+            daoReadings.saveData();
 
 
         }
